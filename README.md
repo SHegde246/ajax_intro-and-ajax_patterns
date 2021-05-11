@@ -19,7 +19,7 @@ Cross-domain access (CORS)
 
 Predictive Fetch
 
-Multi-Stage Download
+Multi-Stage Download snippet
 
 Periodic Refresh and Fallback Patterns
 
