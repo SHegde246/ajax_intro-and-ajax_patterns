@@ -1,0 +1,45 @@
+<html>
+<head>
+<style>
+</style>
+<script>
+obj=
+{
+	timestamp: 0,
+	xhr: new XMLHttpRequest(),
+	getdata: function(timestamp)
+	{
+		this.xhr.onreadystatechange= this.showdata;
+		this.xhr.open("GET","lp2.php?timestamp="+obj.timestamp,true);
+		this.xhr.send();
+	},
+	showdata: function()
+	{
+		if(this.readyState==4 && this.status==200)
+		{
+			var res=this.responseText;
+			//fatal err happ when max time limit of running script is exceeded
+			//in php.ini, can change max time
+			if(this.responseText.indexOf("Fatal") > -1)
+			{
+				console.log("fatal error");
+				this.abort();
+				obj.getdata();
+			}
+			else
+			{
+				var reso=JSON.parse(res);
+				document.getElementById("content").innerHTML=reso.r;
+				obj.timestamp=reso.t;
+				obj.getdata(obj.timestamp);
+			}
+		}
+	}
+}
+</script>
+</head>
+
+<body onload="obj.getdata()">
+<div id="content"></div>
+</body>
+</html>

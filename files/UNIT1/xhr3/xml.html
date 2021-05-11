@@ -1,0 +1,28 @@
+<html>
+<script>
+var obj=
+{
+	xhr: new XMLHttpRequest(),
+	async: function()
+		{
+			this.xhr.onreadystatechange=this.update;
+			this.xhr.open("GET","xml.php?pid="+pid.value,true);
+			this.xhr.send();
+		},
+	update: function()
+		{
+			if(this.readyState==4 && this.status==200)
+			{
+				root=this.responseXML.documentElement;
+				node=root.getElementsByTagName("name")[2];
+				alert(node.firstChild.nodeValue);
+			}
+		}	
+};
+</script>
+
+<body>
+Pandemic name: <input type="text" id="pid" onblur="obj.async()"/><p>
+Symptoms: <input type="text" id="sid"/>
+</body>
+</html>

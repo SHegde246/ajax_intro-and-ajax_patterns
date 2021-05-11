@@ -1,0 +1,107 @@
+<html>
+<script>
+function all()
+{
+var o=this;
+this.timer=null;
+this.again=null;
+this.xhr=new XMLHttpRequest();
+this.fetch_content=function()
+{
+	this.xhr.onreadystatechange=this.show_data;
+	//xhr.timeout=4000;
+	//xhr.ontimeout=fallback;
+	this.xhr.open("GET","pfa2.php",true);
+	this.xhr.send();
+}
+this.show_data=function()
+{
+	if(this.readyState==4 && this.status==200)
+	{
+		//n=2;
+		//console.log("n= "+n);
+		var result=this.responseText;
+		var resultJSON=JSON.parse(result);
+		this.c=document.getElementById("c");
+		this.e=document.getElementById("e");
+		this.m=document.getElementById("m");
+		this.b=document.getElementById("b");
+		c.innerHTML=resultJSON.cse;
+		e.innerHTML=resultJSON.ece;
+		m.innerHTML=resultJSON.me;
+		b.innerHTML=resultJSON.bt;
+
+		this.again=setTimeout(this.fetch_content,5000);
+
+		//document.getElementById("c").innerHTML=resultJSON.cse;
+		//document.getElementById("e").innerHTML=resultJSON.ece;
+		//document.getElementById("m").innerHTML=resultJSON.me;
+		//document.getElementById("b").innerHTML=resultJSON.bt;
+		this.again=setTimeout(this.fetch_content,5000);
+	}
+}
+this.fallback=function()
+{
+	console.log("Haven't received a seat request in quite some time");
+	this.setTimeout(this.fetch_content,2*n*1000);
+	n=n*2;
+	console.log("n= "+n);
+}
+this.settimer=function()
+{
+	n=2;
+	console.log("n= "+n);
+	
+	
+	if(this.timer)
+	{
+		console.log("Fallback thwarted");
+		clearTimeout(this.timer);
+	}
+	this.timer=setTimeout(this.fallback, 15000);
+	
+	//setTimeout  //calls fetch after every 15 sec
+	//clear prev timer, set new timers
+	//after 15 sec, call one function, after every 5 sec, call other func
+		
+}
+}
+var obj=new all();
+</script>
+
+
+<body  onload="obj.fetch_content()">
+<table border="1" cellspacing="0">
+<tr>
+	<td colspan=4 align="center">PES University Seat Availability Matrix</td>
+</tr>
+<tr>
+	<td width="70" align="center">CSE</td>
+	<td width="70" align="center">ECE</td>
+	<td width="70" align="center">ME</td>
+	<td width="70" align="center">BT</td>
+</tr>
+<tr height="30">
+	<td id="c" align="center"></td>
+	<td id="e" align="center"></td>
+	<td id="m" align="center"></td>
+	<td id="b" align="center"></td>		
+</tr>
+</table>
+<p/>
+Select Department:<br/>
+<form action="pfa1.php" method="get" target="ifr" id="form">
+<select name="sel_dept" style="width:150px">
+	<option disabled selected value></option>
+	<option>CSE</option>
+	<option>ECE</option>
+	<option>ME</option>
+	<option>BT</option>
+</select>
+<p/>
+<input type="submit" value="Submit" name="btnsubmit" onclick="obj.settimer()"></input>
+</form>
+<iframe name="ifr" style="display:none"></iframe>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<html>
+<script>
+xhr=new XMLHttpRequest();
+function fetch_content()
+{
+	xhr.onreadystatechange=show_data;
+	xhr.timeout=4000;
+	xhr.ontimeout=fallback;
+	xhr.open("GET","pfa2.php",true);
+	xhr.send();
+}
+function show_data()
+{
+	if(xhr.readyState==4 && xhr.status==200)
+	{
+		n=2;
+		console.log("n= "+n);
+		var result=xhr.responseText;
+		var resultJSON=JSON.parse(result);
+		document.getElementById("c").innerHTML=resultJSON.cse;
+		document.getElementById("e").innerHTML=resultJSON.ece;
+		document.getElementById("m").innerHTML=resultJSON.me;
+		document.getElementById("b").innerHTML=resultJSON.bt;
+		setTimeout(fetch_content,5000);
+	}
+}
+function fallback()
+{
+	console.log("Haven't received a seat request in quite some time");
+	setTimeout(fetch_content,2*n*1000);
+	n=n*2;
+	console.log("n= "+n);
+}
+</script>
+
+
+<body  onload="fetch_content()">
+<table border="1" cellspacing="0">
+<tr>
+	<td colspan=4 align="center">PES University Seat Availability Matrix</td>
+</tr>
+<tr>
+	<td width="70" align="center">CSE</td>
+	<td width="70" align="center">ECE</td>
+	<td width="70" align="center">ME</td>
+	<td width="70" align="center">BT</td>
+</tr>
+<tr height="30">
+	<td id="c" align="center"></td>
+	<td id="e" align="center"></td>
+	<td id="m" align="center"></td>
+	<td id="b" align="center"></td>		
+</tr>
+</table>
+<p/>
+Select Department:<br/>
+<form action="pfa1.php" method="get" target="ifr" id="form">
+<select name="sel_dept" style="width:150px">
+	<option disabled selected value></option>
+	<option>CSE</option>
+	<option>ECE</option>
+	<option>ME</option>
+	<option>BT</option>
+</select>
+<p/>
+<input type="submit" value="Submit" name="btnsubmit"></input>
+</form>
+<iframe name="ifr" style="display:none"></iframe>
+
+</body>
+</html>

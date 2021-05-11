@@ -1,0 +1,48 @@
+<html>
+<script>
+count=0;
+window.onpopstate=restore;
+function restore(e)
+{
+	var res=e.state;
+	document.getElementById("fname").value=res.fname;
+	document.getElementById("cs").value=res.cs;
+	document.getElementById("price").value=res.price;
+}
+var obj=
+{
+	xhr: new XMLHttpRequest(),
+	getdetails: function()
+		    {
+			var fname=document.getElementById("fname").value;
+			this.xhr.onreadystatechange=this.showdetails;
+			this.xhr.open("GET","session history.php?fname="+fname,true);
+			this.xhr.send();
+		    },
+	showdetails: function()
+		     {
+			if(this.readyState==4 && this.status==200)
+			{
+				var res=this.responseText;
+				var rj=JSON.parse(res);
+				document.getElementById("cs").value=rj.cs;
+				document.getElementById("price").value=rj.price;
+			
+				//push state code
+				var hist= new Object();
+				hist["fname"]=document.getElementById("fname").value;
+				hist["cs"]=rj.cs;
+				hist["price"]=rj.price;
+				window.history.pushState(hist,"History","session history.php?count="+count++);
+			}
+		     }
+};
+</script>
+
+<body>
+Food: <input type="text" name="fname" id="fname"
+       onblur="obj.getdetails()"/><p>
+Cuisine: <input type="text" name="cs" id="cs"/><p>
+Price: <input type="text" name="price" id="price"/><p>
+</body>
+</html>

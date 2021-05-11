@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CHATBOX!</title>
+<link rel="stylesheet" type="text/css" href="chat.css"/>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="chat.js"></script>
+</head>
+
+
+
+
+<body onload="obj.monitorchat()">
+<div id="outer">
+<div id="innertop"></div> <!--place where messages are displayed-->
+<div id="innerbot">       <!--place where we type our message-->
+<input type="text" id="msg" onkeyup="obj.checkSend(event)"/><br>
+<label>Enter to Send<input type="checkbox" id="ent"/></label><p>
+<input type="button" value="send" onclick="obj.sendToServer()"/><br>
+<div id="recon">Reconnecting...</div>
+</div>
+</div>
+</body>
+
+</html>

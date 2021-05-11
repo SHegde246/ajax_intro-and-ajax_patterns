@@ -1,0 +1,125 @@
+<html>
+<head>
+<style>
+#container
+{
+border: solid 1px black;
+display: none;
+}
+.fooditem
+{
+	backgroud-color: grey;
+	color: black;
+}
+.fooditem:hover
+{
+	backgroud-color:white;
+}
+</style>
+<script>
+function suggest()
+{
+	//maintain a reference to the current object
+	var object=this;
+	this.timer=null;
+	this.search=null;
+	this.container=null;
+	this.url=null;
+	this.xhr=new XMLHttpRequest();
+	this.getterm=function()
+	{
+		this.search=document.getElementById("search");
+		this.container=document.getElementById("container");
+
+
+
+		//object.search.style.backgroundColor="white";
+		//object.search.style.fontStyle="normal";	
+
+
+		//to invoke the send search function only if the user pauses for a second
+		if(this.timer)  //if prev timer set
+		{
+			clearTimeout(this.timer);
+		}
+		this.timer=setTimeout(this.sendterm,1000);  //after every one second of no keyup, sendterm will get fired
+	}
+	this.sendterm=function()
+	{
+		object.url="st_original.php?term="+object.search.value;
+
+		//check if the search term is available in cache (local storage)
+		if(localStorage.getItem(object.url))
+		{
+			var cacheres=JSON.parse(localStorage.getItem(object.url));
+			object.populatefood(cacheres);
+			console.log("From browser cache");
+		}
+		else
+		{
+			console.log("Getting from server");
+			object.xhr.onreadystatechange=object.showresult;
+			object.xhr.open("GET",object.url,true);
+			object.xhr.send();
+		}
+
+	}
+	this.showresult=function()
+	{
+		if(this.readyState==4 && this.status==200)
+		{
+			var res=this.responseText;
+			var reso=JSON.parse(res);
+
+			//store new search result in cache
+			localStorage.setItem(object.url,res);
+			if(reso.length==0)
+			{
+				object.search.style.backgroundColor="red";
+				object.search.style.fontStyle="italic";
+				object.container.style.display="none";   //ADDED
+			}
+			else
+			{
+				//object.search.style.backgroundColor="white";
+				//object.search.style.fontStyle="normal";
+				object.populatefood(reso);
+			}
+		}
+	}
+	this.populatefood=function(reso)
+	{
+		object.container.innerHTML="";
+		for(f in reso)
+		{
+			var itemdiv=document.createElement("div");
+			itemdiv.innerHTML=reso[f];
+			itemdiv.className="fooditem";
+			object.container.appendChild(itemdiv);
+		}
+		object.container.style.display="block";
+	}
+}
+
+var obj=new suggest();
+</script>
+<head>
+<body>
+<table border="0" cellpadding="0">
+	<tr>
+		<td>Restaurant Name</td>
+		<td><input type="text" id="rname"/></td>
+	<tr>
+
+	<tr>
+		<td>Food Item</td>
+		<td><input type="text" id="search" onkeyup="obj.getterm()"/></td>
+	</tr>
+	
+	<tr>
+		<td></td>
+		<td><div id="container"></div></td>
+	</tr>
+</table>
+</body>
+</html>

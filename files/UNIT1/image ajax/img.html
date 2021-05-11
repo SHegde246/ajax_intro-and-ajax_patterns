@@ -1,0 +1,48 @@
+<html>
+<script>
+function chkusr()
+{
+	usr=document.getElementById("usr");
+	pwd=document.getElementById("pwd");
+
+	if(usr.value=="")
+	{
+		alert("nothing to check");
+		return;
+	}
+	
+	//create an image dynamically
+	img=document.createElement("img");
+	img.onload=success;
+	img.onerror=failure;
+	//image points to php file, hence giving async call to server
+	img.src="img.php?uid=" + usr.value;
+}
+
+function success()
+{
+	if(img.width==100)
+	{
+		pwd.value="user already exists";
+		document.getElementById("body").appendChild(img);
+	}
+	else
+	{
+		pwd.value="user available";
+		document.getElementById("body").appendChild(img);
+	}
+}
+
+function failure()
+{
+	console.log("image loading failed");
+}
+
+</script>
+
+<body id="body">
+username: <input type="text" id="usr" onblur="chkusr()"/><p>
+password: <input type="text" id="pwd"/>
+</body>
+
+</html>

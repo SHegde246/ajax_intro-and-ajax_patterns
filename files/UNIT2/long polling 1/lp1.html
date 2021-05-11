@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<style>
+</style>
+<script>
+timer=null;
+obj=
+{
+	monitor:function()
+	{
+		console.log("in monitor");
+		iframe=document.getElementById("ifr");
+		iframe.src="lp.php";
+	},
+	updatediv:function(str)
+	{
+		newdiv=document.createElement("div");
+		newdiv.innerHTML=str;
+		document.body.appendChild(newdiv);
+		obj.monitor();
+	},
+	heartbeat:function()
+	{
+		if(timer)
+		{
+			clearTimeout(timer);
+		}
+		console.log("in heartbeat");
+		timer=setTimeout(obj.monitor,10000);  //if in heartbeat, ie, if no change in txt file, keep connection alive
+		//after every ten seconds, check up on server
+	}
+}
+</script>
+</head>
+
+<body>
+<input type="button" value="click to monitor" onclick="obj.monitor()"/><br>
+<iframe width="0" height="0" id="ifr"></iframe>
+</body>
+</html>

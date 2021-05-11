@@ -1,0 +1,48 @@
+<html>
+<script>
+var obj=
+{
+	getElectives: function(){
+			var dep=document.getElementById("dept");
+			if(dep.value=="")
+			{
+				alert("Please enter a department");
+				return;
+			}
+			else
+			{
+				var helper=document.getElementById("ifr");
+				helper.src="hidden frames.php?dept=" + dep.value;
+				//Forces GET req to server
+			}
+		      },
+
+	populateElectives: function(electives){
+			//the ret str is sep by ";"
+			//0th ele is dept name. others are elec
+			var retArr=electives.split(";");
+			document.getElementById("dept").value=retArr[0];
+
+			//loop thr elec
+			var sel=document.getElementById("el");
+			sel.innerHTML="";
+			for(var j=1; j<retArr.length; j++)
+			{
+				var opt=document.createElement("option");
+				opt.innerHTML=retArr[j];
+				sel.appendChild(opt);
+			}
+		      }
+};
+</script>
+
+<body>
+Department: <input type="text" id="dept" 
+             placeholder="Enter your department here"
+	     onblur="obj.getElectives()"/><p>
+Electives: <select id="el" 
+	    style="width:100px">
+	   </select>
+<iframe id="ifr" width="100" height="100" style="display:none"/>
+</body>
+</html>

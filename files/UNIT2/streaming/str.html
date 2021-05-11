@@ -1,0 +1,45 @@
+<html>
+<script>
+var obj=
+{
+	xhr: new XMLHttpRequest(),
+	//strlen: 0,
+	monitor: function()
+	{
+		this.xhr.onreadystatechange= this.showtext;
+		this.xhr.open("GET","str.php",true);
+		this.xhr.send();
+	},
+	showtext: function()
+	{
+		if(this.readyState==3 && this.status==200)  //3, because we want only partial response
+		{
+			var res=this.responseText;
+			if(res.indexOf("Fatal") == -1)
+			{
+				console.log("working");
+				var newdiv=document.createElement("div");
+				//new.div.innerHTML=res.slice(obj.strlen);
+				newdiv.innerHTML=res;
+				document.body.appendChild(newdiv);
+			}
+			else
+			{
+				obj.monitor();
+			}
+		}
+		
+		if(this.readyState==4 && this.status==200)
+		{
+			this.abort();
+			obj.monitor();
+		}
+	}
+}
+
+
+
+</script>
+<body onload="obj.monitor()"/>
+</body>
+</html>

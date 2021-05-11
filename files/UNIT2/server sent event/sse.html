@@ -1,0 +1,32 @@
+<html>
+<script>
+obj=
+{
+	receive: function()
+	{
+		var es=new EventSource("sse.php");
+		es.addEventListener("pes",obj.showdata,false);
+		es.addEventListener("over",obj.showend,false);
+		es.addEventListener("open",obj.showstart,false);
+	},
+	showdata: function(e)
+	{
+		console.log(e.data);
+	},
+	showstart: function(e)
+	{
+		console.log(e.data);
+		console.log("receiving");
+	},
+	showend: function(e)
+	{
+		console.log(e.data);
+		console.log("stream ended");
+	}
+}
+</script>
+
+<body>
+<button onclick="obj.receive()">Receive Events</button>
+</body>
+</html>

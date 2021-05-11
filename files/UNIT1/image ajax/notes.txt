@@ -1,0 +1,8 @@
+-user enters usn
+-onblur activates chkusr func, which activates img,
+-which sends async call to php page, with usn value
+-in php page, image created. if received usn is "sneha", dim is one thing. 
+ if usn is something else, dim is something else.
+-sends back to html page.
+-html sees image. based on img dim, can tell if user is already there
+	(sneha => already there)

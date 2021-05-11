@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Multi Stage Download</title>
+<link rel="stylesheet" type="text/css" href="styles.css" >
+<script>
+var xhr=new XMLHttpRequest();
+function getcontent()
+{
+	xhr.onreadystatechange=showContent;
+	xhr.open("GET","content.txt",true);
+	xhr.send();
+}
+function showContent()
+{
+	if(xhr.readyState==4 && xhr.status==200)
+	{
+	var res=xhr.responseText;
+	var resArr=res.split(";");
+	document.getElementById("secondary").innerHTML=resArr[0];
+	document.getElementById("picture").innerHTML=resArr[3];
+	document.getElementById("links").innerHTML=resArr[3];
+	document.getElementById("video").innerHTML=resArr[3];
+	document.getElementById("footer").innerHTML=resArr[3];
+	setTimeout(getPic,1000)
+	}
+}
+function getPic()
+{
+	xhr.onreadystatechange=showPic;
+	xhr.open("GET","image.txt",true);
+	xhr.send();
+}
+function showPic()
+{
+	if(xhr.readyState==4 && xhr.status==200)
+	{
+	document.getElementById("picture").innerHTML=xhr.responseText;
+	setTimeout(getLinks,1000);
+	console.log(xhr.readyState);
+	}
+}	
+function getLinks()
+{
+	xhr.onreadystatechange=showLinks;
+	xhr.open("GET","links.txt",true);
+	xhr.send();
+}
+function showLinks()
+{
+	if(xhr.readyState==4 && xhr.status==200)
+	{
+	document.getElementById("links").innerHTML=xhr.responseText;
+	setTimeout(getvideo,1000);
+	console.log(xhr.readyState);
+	}
+}	
+function getvideo()
+{
+	xhr.onreadystatechange=showvideo;
+	xhr.open("GET","test.php",true);
+	xhr.responseType = "blob";
+	xhr.send();
+}
+function showvideo()
+{
+	if(xhr.readyState==4 && xhr.status==200)
+	{
+	var res = this.response;
+	vid = document.createElement("video");
+	vid.src = URL.createObjectURL(res);
+	vid.controls = true;
+	vid.autoplay = true;
+	console.log(xhr.readyState);
+	document.getElementById("video").appendChild(vid);
+	}
+}	
+</script>
+</head >
+<body onload = "getcontent()">
+<div id="doc" class="yui-t7">
+    <div class="yui-b">
+    <div id="container"></div>
+  </div>
+  <div id="bd">
+    <div id="yui-main">
+      <div class="yui-b">
+        <div class="yui-gb">
+          <div class="yui-u first">
+		  <div class="content" id="picture">Picture</div>
+            
+          </div>
+          <div class="yui-u">
+            <div class="content" id="links">Links</div>
+          </div>
+          <div class="yui-u">
+            <div class="content" id="secondary">Text Content</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="yui-b">
+      <div id="video">Video</div>
+    </div>
+  </div>
+  <div id="ft">
+    <div id="footer">Footer</div>
+  </div>
+</div>
+</body>
+</html>
+
+/////////////////////////////////////////////////////
+
+<?php
+header("Content-type:video/MOV");
+$file = fopen("LK.MOV","rb");
+$f = fread($file,filesize("LK.MOV"));
+echo $f;
+fclose($file);
+?>

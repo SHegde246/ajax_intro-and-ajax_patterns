@@ -1,0 +1,55 @@
+<html>
+
+<head>
+<style>
+.score{
+border:solid 4px blue;
+height:100px;
+width:350px;
+}
+</style>
+</head>
+
+<script>
+xhr= new XMLHttpRequest();
+function fetch()
+{
+	xhr.onreadystatechange=show;
+	xhr.timeout=4000;
+	xhr.ontimeout=backoff;
+	xhr.open("GET","perref.php",true);
+	xhr.send();
+}
+function show()
+{
+	if(xhr.readyState==4 && xhr.status==200)
+	{
+		n=2;
+		console.log(n);
+		var res=xhr.responseText;
+		var resArr=res.split(";");
+		document.getElementById("team1").innerHTML=resArr[0];
+		document.getElementById("team2").innerHTML=resArr[1];
+		document.getElementById("team3").innerHTML=resArr[2];
+		document.getElementById("status").innerHTML+="-------";
+		//setInterval(fetch,3000);
+		setTimeout(fetch,3000);
+	}
+}
+function backoff()
+{
+	console.log("No response received");
+	setTimeout(fetch,2*n*1000);
+	n=n*2;
+	console.log("n value: " + n);
+}
+</script>
+
+<body onload="fetch()">
+<div id="status"><b> Scores are updating...</b></div>
+Team A RCB<div id="team1" class="score"></div>
+Team B CSK<div id="team2" class="score"></div>
+Team C MI<div id="team3" class="score"></div>
+</body>
+
+</html>
